@@ -7,6 +7,14 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+/*
+ * Class:     com_surevine_spiffing_Spif
+ * Method:    name
+ * Signature: ()Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_com_surevine_spiffing_Spif_name
+  (JNIEnv *, jobject);
+
 #ifdef __cplusplus
 }
 #endif

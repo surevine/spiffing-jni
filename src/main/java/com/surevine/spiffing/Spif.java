@@ -26,8 +26,9 @@ package com.surevine.spiffing;
 
 public class Spif {
     public Spif(long h) {
-        handle = h;
+        m_handle = h;
     }
+    public native String name();
 
-    private static long handle;
+    private long m_handle;
 }

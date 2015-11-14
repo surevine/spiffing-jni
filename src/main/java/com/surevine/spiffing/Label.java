@@ -24,35 +24,24 @@
 
 package com.surevine.spiffing;
 
-public class Site {
-    private native void init();
-    public Site() {
-        init();
+public class Label {
+    public Label(String base64) {
+        init(base64);
     }
-    private native long spif_native(String oid);
-    public Spif spif(String oid) {
-        return new Spif(spif_native(oid));
-    }
-    private native long load_native(String filename);
-    public Spif load(String filename) {
-        return new Spif(load_native(filename));
-    }
-    public static Site site() {
-        if (s_instance == null) {
-            s_instance = new Site();
-        }
-        return s_instance;
-    }
-    private native void dispose_native();
     public void dispose() {
-        dispose_native();
-        if (s_instance != null) {
-            s_instance = null;
-        }
+        dispose_n();
     }
-    private static Site s_instance;
+    public native String displayMarking();
+    public native String fgColour();
+    public native String bgColour();
+    public native String toESSBase64();
+    public Spif policy() {
+        return new Spif(policy_n());
+    }
+    public native boolean valid();
+
     private long m_handle;
-    static {
-        System.loadLibrary("spiffing-jni");
-    }
+    private native void init(String base64);
+    private native void dispose_n();
+    private native long policy_n();
 }
