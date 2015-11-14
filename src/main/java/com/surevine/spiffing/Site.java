@@ -25,26 +25,26 @@
 package com.surevine.spiffing;
 
 public class Site {
-    private native void init();
-    public Site() {
+    private native void init() throws SIOException;
+    public Site() throws SIOException {
         init();
     }
-    private native long spif_native(String oid);
-    public Spif spif(String oid) {
+    private native long spif_native(String oid) throws SIOException;
+    public Spif spif(String oid) throws SIOException {
         return new Spif(spif_native(oid));
     }
-    private native long load_native(String filename);
-    public Spif load(String filename) {
+    private native long load_native(String filename) throws SIOException;
+    public Spif load(String filename) throws SIOException {
         return new Spif(load_native(filename));
     }
-    public static Site site() {
+    public static Site site() throws SIOException {
         if (s_instance == null) {
             s_instance = new Site();
         }
         return s_instance;
     }
-    private native void dispose_native();
-    public void dispose() {
+    private native void dispose_native() throws SIOException;
+    public void dispose() throws SIOException {
         dispose_native();
         if (s_instance != null) {
             s_instance = null;

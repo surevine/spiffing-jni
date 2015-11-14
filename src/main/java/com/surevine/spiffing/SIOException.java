@@ -24,24 +24,8 @@
 
 package com.surevine.spiffing;
 
-public class Label {
-    public Label(String base64) throws SIOException {
-        init(base64);
+public class SIOException extends java.lang.Exception {
+    public SIOException(String what) {
+        super(what);
     }
-    public void dispose() throws SIOException {
-        dispose_n();
-    }
-    public native String displayMarking() throws SIOException;
-    public native String fgColour() throws SIOException;
-    public native String bgColour() throws SIOException;
-    public native String toESSBase64() throws SIOException;
-    public Spif policy() throws SIOException {
-        return new Spif(policy_n());
-    }
-    public native boolean valid() throws SIOException;
-
-    private long m_handle;
-    private native void init(String base64) throws SIOException;
-    private native void dispose_n() throws SIOException;
-    private native long policy_n() throws SIOException;
 }

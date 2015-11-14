@@ -29,6 +29,7 @@
 #include "com_surevine_spiffing_Label.h"
 #include "handle.h"
 #include "base64.h"
+#include "exception.h"
 #include <spiffing/label.h>
 #include <spiffing/spif.h>
 #include <b64/decode.h>
@@ -43,10 +44,14 @@
  */
 JNIEXPORT jstring JNICALL Java_com_surevine_spiffing_Label_displayMarking
         (JNIEnv * jenv, jobject jobj) {
-    Spiffing::Label * label = getHandle<Spiffing::Label>(jenv, jobj);
-    Spiffing::Spif const & spif = label->policy();
-    std::string dm = spif.displayMarking(*label, Spiffing::MarkingCode::pageTop);
-    return jenv->NewStringUTF(dm.c_str());
+    try {
+        Spiffing::Label * label = getHandle<Spiffing::Label>(jenv, jobj);
+        Spiffing::Spif const & spif = label->policy();
+        std::string dm = spif.displayMarking(*label, Spiffing::MarkingCode::pageTop);
+        return jenv->NewStringUTF(dm.c_str());
+    } catch (std::runtime_error & e) {
+        SpiffingJNI::throwJava(jenv, e);
+    }
 }
 
 /*
@@ -56,8 +61,12 @@ JNIEXPORT jstring JNICALL Java_com_surevine_spiffing_Label_displayMarking
  */
 JNIEXPORT jstring JNICALL Java_com_surevine_spiffing_Label_fgColour
         (JNIEnv * jenv, jobject jobj) {
-    Spiffing::Label * label = getHandle<Spiffing::Label>(jenv, jobj);
-    return jenv->NewStringUTF(label->classification().fgcolour().c_str());
+    try {
+        Spiffing::Label * label = getHandle<Spiffing::Label>(jenv, jobj);
+        return jenv->NewStringUTF(label->classification().fgcolour().c_str());
+    } catch (std::runtime_error & e) {
+        SpiffingJNI::throwJava(jenv, e);
+    }
 }
 
 /*
@@ -77,17 +86,21 @@ JNIEXPORT jstring JNICALL Java_com_surevine_spiffing_Label_bgColour
  */
 JNIEXPORT void JNICALL Java_com_surevine_spiffing_Label_init
         (JNIEnv * jenv, jobject jobj, jstring jbase64) {
-    auto deleter = [&jbase64, &jenv](const char * d) {
-        jenv->ReleaseStringUTFChars(jbase64, d);
-    };
-    std::unique_ptr<const char, decltype(deleter)> base64(jenv->GetStringUTFChars(jbase64, nullptr), deleter);
-    std::size_t base64_len = jenv->GetStringLength(jbase64);
-    std::cerr << "Decoding " << base64_len << " bytes of base64." << std::endl;
-    std::cerr << "Data is " << &*base64 << std::endl;
-    std::string labelstr = base64_decode(std::string{&*base64, base64_len});
-    std::cerr << "-> Into " << labelstr.length() << " bytes of BER." << std::endl;
-    Spiffing::Label * label = new Spiffing::Label(labelstr, Spiffing::Format::BER);
-    setHandle(jenv, jobj, label);
+    try {
+        auto deleter = [&jbase64, &jenv](const char * d) {
+            jenv->ReleaseStringUTFChars(jbase64, d);
+        };
+        std::unique_ptr<const char, decltype(deleter)> base64(jenv->GetStringUTFChars(jbase64, nullptr), deleter);
+        std::size_t base64_len = jenv->GetStringLength(jbase64);
+        std::cerr << "Decoding " << base64_len << " bytes of base64." << std::endl;
+        std::cerr << "Data is " << &*base64 << std::endl;
+        std::string labelstr = base64_decode(std::string{&*base64, base64_len});
+        std::cerr << "-> Into " << labelstr.length() << " bytes of BER." << std::endl;
+        Spiffing::Label * label = new Spiffing::Label(labelstr, Spiffing::Format::BER);
+        setHandle(jenv, jobj, label);
+    } catch (std::runtime_error & e) {
+        SpiffingJNI::throwJava(jenv, e);
+    }
 }
 
 /*
@@ -97,9 +110,13 @@ JNIEXPORT void JNICALL Java_com_surevine_spiffing_Label_init
  */
 JNIEXPORT void JNICALL Java_com_surevine_spiffing_Label_dispose_1n
         (JNIEnv * jenv, jobject jobj) {
-    Spiffing::Label * label = getHandle<Spiffing::Label>(jenv, jobj);
-    delete label;
-    setHandle<Spiffing::Label>(jenv, jobj, nullptr);
+    try {
+        Spiffing::Label * label = getHandle<Spiffing::Label>(jenv, jobj);
+        delete label;
+        setHandle<Spiffing::Label>(jenv, jobj, nullptr);
+    } catch (std::runtime_error & e) {
+        SpiffingJNI::throwJava(jenv, e);
+    }
 }
 
 /*
@@ -109,8 +126,12 @@ JNIEXPORT void JNICALL Java_com_surevine_spiffing_Label_dispose_1n
  */
 JNIEXPORT jlong JNICALL Java_com_surevine_spiffing_Label_policy_1n
         (JNIEnv * jenv, jobject jobj) {
-    Spiffing::Label * label = getHandle<Spiffing::Label>(jenv, jobj);
-    return reinterpret_cast<jlong>(&label->policy());
+    try {
+        Spiffing::Label * label = getHandle<Spiffing::Label>(jenv, jobj);
+        return reinterpret_cast<jlong>(&label->policy());
+    } catch (std::runtime_error & e) {
+        SpiffingJNI::throwJava(jenv, e);
+    }
 }
 
 /*
@@ -120,9 +141,14 @@ JNIEXPORT jlong JNICALL Java_com_surevine_spiffing_Label_policy_1n
  */
 JNIEXPORT jboolean JNICALL Java_com_surevine_spiffing_Label_valid
         (JNIEnv * jenv, jobject jobj) {
-    Spiffing::Label * label = getHandle<Spiffing::Label>(jenv, jobj);
-    Spiffing::Spif const & spif = label->policy();
-    return spif.valid(*label);
+    try {
+        Spiffing::Label * label = getHandle<Spiffing::Label>(jenv, jobj);
+        Spiffing::Spif const & spif = label->policy();
+        return spif.valid(*label);
+    } catch (std::runtime_error & e) {
+        SpiffingJNI::throwJava(jenv, e);
+    }
+
 }
 
 /*
@@ -132,10 +158,14 @@ JNIEXPORT jboolean JNICALL Java_com_surevine_spiffing_Label_valid
  */
 JNIEXPORT jstring JNICALL Java_com_surevine_spiffing_Label_toESSBase64
         (JNIEnv * jenv, jobject jobj) {
-    Spiffing::Label * label = getHandle<Spiffing::Label>(jenv, jobj);
-    std::string out;
-    label->write(Spiffing::Format::BER, out);
-    std::string labelstr = base64_encode(reinterpret_cast<const unsigned char *>(out.c_str()), out.length());
-    return jenv->NewStringUTF(labelstr.c_str());
+    try {
+        Spiffing::Label *label = getHandle<Spiffing::Label>(jenv, jobj);
+        std::string out;
+        label->write(Spiffing::Format::BER, out);
+        std::string labelstr = base64_encode(reinterpret_cast<const unsigned char *>(out.c_str()), out.length());
+        return jenv->NewStringUTF(labelstr.c_str());
+    } catch (std::runtime_error & e) {
+        SpiffingJNI::throwJava(jenv, e);
+    }
 }
 

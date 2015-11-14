@@ -24,6 +24,7 @@
 
 #include "com_surevine_spiffing_Site.h"
 #include "handle.h"
+#include "exception.h"
 #include <spiffing/spiffing.h>
 #include <fstream>
 
@@ -34,7 +35,11 @@
  */
 JNIEXPORT void JNICALL Java_com_surevine_spiffing_Site_init
 (JNIEnv * jenv, jobject jobj) {
+    try {
         setHandle(jenv, jobj, new Spiffing::Site());
+    } catch (std::runtime_error & e) {
+        SpiffingJNI::throwJava(jenv, e);
+    }
 }
 
 /*
@@ -44,12 +49,16 @@ JNIEXPORT void JNICALL Java_com_surevine_spiffing_Site_init
  */
 JNIEXPORT jlong JNICALL Java_com_surevine_spiffing_Site_spif_1native
         (JNIEnv * jenv, jobject jobj, jstring joid) {
+    try {
         auto deleter = [&joid, &jenv](const char * d) {
             jenv->ReleaseStringUTFChars(joid, d);
         };
         std::unique_ptr<const char, decltype(deleter)> oid(jenv->GetStringUTFChars(joid, nullptr), deleter);
         std::shared_ptr<Spiffing::Spif> spif(Spiffing::Site::site().spif(&*oid));
         return reinterpret_cast<jlong>(&*spif);
+    } catch (std::runtime_error & e) {
+        SpiffingJNI::throwJava(jenv, e);
+    }
 }
 
 /*
@@ -59,6 +68,7 @@ JNIEXPORT jlong JNICALL Java_com_surevine_spiffing_Site_spif_1native
  */
 JNIEXPORT jlong JNICALL Java_com_surevine_spiffing_Site_load_1native
         (JNIEnv * jenv, jobject jobj, jstring jfilename) {
+    try {
         auto deleter = [&jfilename, &jenv](const char * d) {
             jenv->ReleaseStringUTFChars(jfilename, d);
         };
@@ -66,6 +76,9 @@ JNIEXPORT jlong JNICALL Java_com_surevine_spiffing_Site_load_1native
         std::ifstream ifs(&*filename);
         std::shared_ptr<Spiffing::Spif> spif(Spiffing::Site::site().load(ifs));
         return reinterpret_cast<jlong>(&*spif);
+    } catch (std::runtime_error & e) {
+        SpiffingJNI::throwJava(jenv, e);
+    }
 }
 
 /*
@@ -75,7 +88,11 @@ JNIEXPORT jlong JNICALL Java_com_surevine_spiffing_Site_load_1native
  */
 JNIEXPORT void JNICALL Java_com_surevine_spiffing_Site_dispose_1native
 (JNIEnv * jenv, jobject jobj) {
+    try {
         Spiffing::Site * s = getHandle<Spiffing::Site>(jenv, jobj);
         delete s;
         setHandle<Spiffing::Site>(jenv, jobj, nullptr);
+    } catch (std::runtime_error & e) {
+        SpiffingJNI::throwJava(jenv, e);
+    }
 }

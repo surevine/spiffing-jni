@@ -28,7 +28,7 @@ public class Spif {
     public Spif(long h) {
         m_handle = h;
     }
-    public native String name();
+    public native String name() throws SIOException;
 
     private long m_handle;
 }
