@@ -5,6 +5,7 @@
       <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/base64.cc" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/base64.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/clearance.cc" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/com_surevine_spiffing_Site.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/exception.cc" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/exception.h" isTestSource="false" />
