@@ -32,7 +32,6 @@ add_custom_target(mvn_install_${MVN_TARGET}
 endmacro(mvn_install)
 
 include_directories(/home/dwd/src/spiffing/include/)
-include_directories(/home/dwd/libb64/include/)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")

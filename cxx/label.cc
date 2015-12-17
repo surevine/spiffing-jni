@@ -32,8 +32,6 @@
 #include "exception.h"
 #include <spiffing/label.h>
 #include <spiffing/spif.h>
-#include <b64/decode.h>
-#include <b64/encode.h>
 
 #include <iostream>
 
