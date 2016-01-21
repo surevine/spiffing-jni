@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Surevine Ltd
+ * Copyright 2016 Surevine Ltd
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -24,11 +24,14 @@
 
 package com.surevine.spiffing;
 
-public class Label {
+public class Label implements AutoCloseable {
     public Label(String base64) throws SIOException {
         init(base64);
     }
-    public void dispose() throws SIOException {
+    private Label(long ptr) {
+        m_handle = ptr;
+    }
+    public void dispose() {
         dispose_n();
     }
     public native String displayMarking() throws SIOException;
@@ -39,9 +42,17 @@ public class Label {
         return new Spif(policy_n());
     }
     public native boolean valid() throws SIOException;
+    private native long encryptn(String policy_id) throws SIOException;
+    public Label encrypt(Spif spif) throws SIOException {
+        return new Label(encryptn(spif.policy_id()));
+    }
 
     private long m_handle;
     private native void init(String base64) throws SIOException;
-    private native void dispose_n() throws SIOException;
+    private native void dispose_n();
     private native long policy_n() throws SIOException;
+    @Override
+    public void close() throws Exception {
+        dispose();
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Surevine Ltd
+ * Copyright 2016 Surevine Ltd
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -27,7 +27,7 @@ package com.surevine.spiffing;
 /**
  * Created by dwd on 14/11/15.
  */
-public class Clearance {
+public class Clearance implements AutoCloseable {
     public Clearance(String base64) throws SIOException {
         init(base64);
     }
@@ -39,6 +39,10 @@ public class Clearance {
 
     private native long policy_native() throws SIOException;
     private native void init(String base64) throws SIOException;
-    private native void dispose();
+    public native void dispose();
     private long m_handle;
+    @Override
+    public void close() throws Exception {
+        dispose();
+    }
 }

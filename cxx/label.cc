@@ -108,13 +108,9 @@ JNIEXPORT void JNICALL Java_com_surevine_spiffing_Label_init
  */
 JNIEXPORT void JNICALL Java_com_surevine_spiffing_Label_dispose_1n
         (JNIEnv * jenv, jobject jobj) {
-    try {
-        Spiffing::Label * label = getHandle<Spiffing::Label>(jenv, jobj);
-        delete label;
-        setHandle<Spiffing::Label>(jenv, jobj, nullptr);
-    } catch (std::runtime_error & e) {
-        SpiffingJNI::throwJava(jenv, e);
-    }
+    Spiffing::Label * label = getHandle<Spiffing::Label>(jenv, jobj);
+    delete label;
+    setHandle<Spiffing::Label>(jenv, jobj, nullptr);
 }
 
 /*
@@ -167,3 +163,23 @@ JNIEXPORT jstring JNICALL Java_com_surevine_spiffing_Label_toESSBase64
     }
 }
 
+/*
+ * Class:     com_surevine_spiffing_Label
+ * Method:    encrypt
+ * Signature: (Ljava/lang/String;)Z
+ */
+JNIEXPORT jlong JNICALL Java_com_surevine_spiffing_Label_encryptn
+        (JNIEnv * jenv, jobject jobj, jstring jstr) {
+    try {
+        auto deleter = [&jstr, &jenv](const char * d) {
+            jenv->ReleaseStringUTFChars(jstr, d);
+        };
+        std::unique_ptr<const char, decltype(deleter)> str(jenv->GetStringUTFChars(jstr, nullptr), deleter);
+        std::string policy_id{&*str};
+        Spiffing::Label * label = getHandle<Spiffing::Label>(jenv, jobj);
+        std::unique_ptr<Spiffing::Label> newl = label->encrypt(policy_id);
+        return reinterpret_cast<jlong>(newl.release());
+    } catch (std::runtime_error & e) {
+        SpiffingJNI::throwJava(jenv, e);
+    }
+}

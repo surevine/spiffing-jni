@@ -20,10 +20,9 @@ add_custom_target(javah_${JAVA_TARGET} DEPENDS ${JAVA_TARGET}
 )
 endmacro(javah)
 
-macro(mvn_install MVN_TARGET MVN_FILE MVN_GROUP MVN_ARTIFACT MVN_VERSION)
+macro(mvn_install MVN_TARGET MVN_FILE MVN_PACKAGING MVN_GROUP MVN_ARTIFACT MVN_VERSION)
 set(MVN_TARGET_PATH ${MVN_FILE})
 get_filename_component(MVN_TARGET_FILE ${MVN_TARGET_PATH} NAME)
-get_filename_component(MVN_PACKAGING ${MVN_TARGET_PATH} EXT)
 add_custom_target(mvn_install_${MVN_TARGET}
 	DEPENDS ${MVN_TARGET}
 	COMMAND "mvn" install:install-file -Dfile=${MVN_TARGET_FILE} -DgroupId=${MVN_GROUP} -DartifactId=${MVN_ARTIFACT} -Dversion=${MVN_VERSION} -Dpackaging=${MVN_PACKAGING}
@@ -38,7 +37,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 set(SOURCE_FILES cxx/site.cc cxx/handle.h cxx/label.cc cxx/spif.cc cxx/base64.cc cxx/base64.h cxx/exception.cc cxx/exception.h cxx/clearance.cc com_surevine_spiffing_Label.h com_surevine_spiffing_Site.h)
 set_property(SOURCE com_surevine_spiffing_Site.h com_surevine_spiffing_Label.h PROPERTY GENERATED TRUE)
-javah(com.surevine.spiffing
+javah(spiffing-jar
 	"com.surevine.spiffing.Site"
 	"com.surevine.spiffing.Label"
 	"com.surevine.spiffing.Clearance"
@@ -47,14 +46,14 @@ javah(com.surevine.spiffing
 
 link_directories(/home/dwd/src/spiffing/build/)
 add_library(spiffing-jni SHARED ${SOURCE_FILES})
-add_dependencies(spiffing-jni javah_com.surevine.spiffing)
+add_dependencies(spiffing-jni javah_spiffing-jar)
 target_link_libraries(spiffing-jni PRIVATE spiffing spiffing-asn)
 set(SPIFFING_FILE ${CMAKE_SHARED_LIBRARY_PREFIX}spiffing-jni${CMAKE_SHARED_LIBRARY_SUFFIX})
-mvn_install(spiffing-jni ${SPIFFING_FILE} com.surevine.spiffing spiffing-native 1.0-SNAPSHOT)
+mvn_install(spiffing-jni ${SPIFFING_FILE} so com.surevine.spiffing spiffing-native 1.0-SNAPSHOT)
 
 file(GLOB JAVA_SOURCE java/src/main/java/com/surevine/spiffing/*.java)
-add_jar(com.surevine.spiffing ${JAVA_SOURCE})
-mvn_install(com.surevine.spiffing com.surevine.spiffing.jar com.surevine.spiffing spiffing-jni 1.0-SNAPSHOT)
+add_jar(spiffing-jar ${JAVA_SOURCE})
+mvn_install(spiffing-jar spiffing-jar.jar jar com.surevine.spiffing spiffing-jni 1.0-SNAPSHOT)
 
-add_custom_target(mvn_install DEPENDS mvn_install_com.surevine.spiffing mvn_install_spiffing-jni)
+add_custom_target(mvn_install DEPENDS mvn_install_spiffing-jar mvn_install_spiffing-jni)
 

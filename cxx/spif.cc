@@ -17,3 +17,18 @@ JNIEXPORT jstring JNICALL Java_com_surevine_spiffing_Spif_name
         SpiffingJNI::throwJava(jenv, e);
     }
 }
+
+/*
+ * Class:     com_surevine_spiffing_Spif
+ * Method:    policy_id
+ * Signature: ()Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_com_surevine_spiffing_Spif_policy_1id
+        (JNIEnv * jenv, jobject jobj) {
+    try {
+        Spiffing::Spif * spif = getHandle<Spiffing::Spif>(jenv, jobj);
+        return jenv->NewStringUTF(spif->policy_id().c_str());
+    } catch (std::runtime_error & e) {
+        SpiffingJNI::throwJava(jenv, e);
+    }
+}

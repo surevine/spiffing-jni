@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Surevine Ltd
+ * Copyright 2016 Surevine Ltd
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -24,7 +24,7 @@
 
 package com.surevine.spiffing;
 
-public class Site {
+public class Site implements AutoCloseable {
     private native void init() throws SIOException;
     public Site() throws SIOException {
         init();
@@ -54,5 +54,9 @@ public class Site {
     private long m_handle;
     static {
         System.loadLibrary("spiffing-jni");
+    }
+    @Override
+    public void close() throws Exception {
+        dispose();
     }
 }

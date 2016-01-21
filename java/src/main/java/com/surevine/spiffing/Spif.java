@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Surevine Ltd
+ * Copyright 2016 Surevine Ltd
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -29,6 +29,7 @@ public class Spif {
         m_handle = h;
     }
     public native String name() throws SIOException;
+    public native String policy_id() throws SIOException;
 
     private long m_handle;
 }
