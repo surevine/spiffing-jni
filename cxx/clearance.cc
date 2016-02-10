@@ -98,3 +98,22 @@ JNIEXPORT void JNICALL Java_com_surevine_spiffing_Clearance_dispose
         SpiffingJNI::throwJava(jenv, e);
     }
 }
+
+/*
+ * Class:     com_surevine_spiffing_Label
+ * Method:    fgColour
+ * Signature: ()Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_com_surevine_spiffing_Clearance_toESSBase64
+        (JNIEnv * jenv, jobject jobj) {
+    try {
+        Spiffing::Clearance *clr = getHandle<Spiffing::Clearance>(jenv, jobj);
+        std::string out;
+        clr->write(Spiffing::Format::BER, out);
+        std::string clrstr = base64_encode(reinterpret_cast<const unsigned char *>(out.c_str()), out.length());
+        return jenv->NewStringUTF(clrstr.c_str());
+    } catch (std::runtime_error & e) {
+        SpiffingJNI::throwJava(jenv, e);
+    }
+}
+
