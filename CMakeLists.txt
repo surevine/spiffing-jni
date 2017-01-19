@@ -30,7 +30,7 @@ add_custom_target(mvn_install_${MVN_TARGET}
 )
 endmacro(mvn_install)
 
-include_directories(/home/dwd/src/spiffing/include/)
+include_directories(${CMAKE_SOURCE_DIR}/../spiffing/include/)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
@@ -44,7 +44,7 @@ javah(spiffing-jar
 	"com.surevine.spiffing.Spif"
 )
 
-link_directories(/home/dwd/src/spiffing/build/)
+link_directories(${CMAKE_SOURCE_DIR}/../spiffing/build/)
 add_library(spiffing-jni SHARED ${SOURCE_FILES})
 add_dependencies(spiffing-jni javah_spiffing-jar)
 target_link_libraries(spiffing-jni PRIVATE spiffing spiffing-asn)

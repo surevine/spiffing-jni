@@ -165,6 +165,24 @@ JNIEXPORT jstring JNICALL Java_com_surevine_spiffing_Label_toESSBase64
 
 /*
  * Class:     com_surevine_spiffing_Label
+ * Method:    fgColour
+ * Signature: ()Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_com_surevine_spiffing_Label_toNATOXML
+        (JNIEnv * jenv, jobject jobj) {
+    try {
+        Spiffing::Label *label = getHandle<Spiffing::Label>(jenv, jobj);
+        std::string out;
+        label->write(Spiffing::Format::NATO, out);
+        std::string labelstr = base64_encode(reinterpret_cast<const unsigned char *>(out.c_str()), out.length());
+        return jenv->NewStringUTF(labelstr.c_str());
+    } catch (std::runtime_error & e) {
+        SpiffingJNI::throwJava(jenv, e);
+    }
+}
+
+/*
+ * Class:     com_surevine_spiffing_Label
  * Method:    encrypt
  * Signature: (Ljava/lang/String;)Z
  */

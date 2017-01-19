@@ -38,6 +38,7 @@ public class Label implements AutoCloseable {
     public native String fgColour() throws SIOException;
     public native String bgColour() throws SIOException;
     public native String toESSBase64() throws SIOException;
+    public native String toNATOXML() throws SIOException;
     public Spif policy() throws SIOException {
         return new Spif(policy_n());
     }
