@@ -117,3 +117,21 @@ JNIEXPORT jstring JNICALL Java_com_surevine_spiffing_Clearance_toESSBase64
     }
 }
 
+
+/*
+ * Class:     com_surevine_spiffing_Label
+ * Method:    fgColour
+ * Signature: ()Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_com_surevine_spiffing_Clearance_toNATOXML
+        (JNIEnv * jenv, jobject jobj) {
+    try {
+        Spiffing::Clearance *clr = getHandle<Spiffing::Clearance>(jenv, jobj);
+        std::string out;
+        clr->write(Spiffing::Format::NATO, out);
+        return jenv->NewStringUTF(out.c_str());
+    } catch (std::runtime_error & e) {
+        SpiffingJNI::throwJava(jenv, e);
+    }
+}
+

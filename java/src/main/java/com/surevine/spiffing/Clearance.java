@@ -34,6 +34,7 @@ public class Clearance implements AutoCloseable {
     public native String displayMarking() throws SIOException;
     public native boolean dominates(Label l) throws SIOException;
     public native String toESSBase64() throws SIOException;
+    public native String toNATOXML() throws SIOException;
     public Spif policy() throws SIOException {
         return new Spif(policy_native());
     }
