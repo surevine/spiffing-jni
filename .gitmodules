@@ -1,0 +1,3 @@
+[submodule "deps/spiffing"]
+	path = deps/spiffing
+	url = http://github.com/surevine/spiffing
