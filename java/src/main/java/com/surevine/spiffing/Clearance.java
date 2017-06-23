@@ -41,12 +41,12 @@ public class Clearance implements AutoCloseable {
     public Spif policy() throws SIOException {
         return new Spif(policy_native());
     }
-    public Clearance combine(Clearance other) throws SIOException {
-        return new Clearance(combine_native(other.m_handle));
+    public Clearance restrict(Clearance other) throws SIOException {
+        return new Clearance(restrict_native(other.m_handle));
     }
 
     private native long policy_native() throws SIOException;
-    private native long combine_native(long otherptr) throws SIOException;
+    private native long restrict_native(long otherptr) throws SIOException;
     private native void init(String base64) throws SIOException;
     public native void dispose();
     private long m_handle;
