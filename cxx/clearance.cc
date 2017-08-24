@@ -135,3 +135,13 @@ JNIEXPORT jstring JNICALL Java_com_surevine_spiffing_Clearance_toNATOXML
     }
 }
 
+JNIEXPORT jlong JNICALL Java_com_surevine_spiffing_Clearance_restrict_native
+        (JNIEnv * jenv, jobject jobj, jlong other_clr) {
+    try {
+        Spiffing::Clearance *clr = getHandle<Spiffing::Clearance>(jenv, jobj);
+        std::unique_ptr<Spiffing::Clearance> newclr(clr->restrict(*reinterpret_cast<Spiffing::Clearance *>(other_clr)));
+        return reinterpret_cast<jlong>(newclr.release());
+    } catch (std::runtime_error & e) {
+        SpiffingJNI::throwJava(jenv, e);
+    }
+}
