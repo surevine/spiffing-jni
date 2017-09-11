@@ -79,7 +79,13 @@ JNIEXPORT void JNICALL Java_com_surevine_spiffing_Clearance_init
         Spiffing::Clearance * clr = new Spiffing::Clearance(clrstr, Spiffing::Format::BER);
         setHandle(jenv, jobj, clr);
     } catch (std::runtime_error & e) {
-        SpiffingJNI::throwJava(jenv, e);
+        try {
+            const char *xmlString = jenv->GetStringUTFChars(jbase64, nullptr);
+            Spiffing::Clearance * clr = new Spiffing::Clearance(xmlString, Spiffing::Format::XML);
+            setHandle(jenv, jobj, clr);
+        } catch (std::runtime_error & e) {
+            SpiffingJNI::throwJava(jenv, e);
+        }
     }
 }
 
